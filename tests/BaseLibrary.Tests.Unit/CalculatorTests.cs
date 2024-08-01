@@ -1,6 +1,7 @@
+using FluentAssertions;
 using Xunit.Abstractions;
 
-namespace CalculatorLibrary.Tests;
+namespace BaseLibrary.Tests.Unit;
 
 public class CalculatorTests : IAsyncLifetime
 {
@@ -43,7 +44,7 @@ public class CalculatorTests : IAsyncLifetime
         var result = _sut.Multiply(a, b);
 
         // Assert
-        Assert.Equal(expected, result);
+        result.Should().Be(expected);
     }
 
     [Theory]
@@ -55,7 +56,7 @@ public class CalculatorTests : IAsyncLifetime
         var result = _sut.Divide(a, b);
 
         // Assert
-        Assert.Equal(expected, result);
+        result.Should().Be(expected);
     }
 
     public async Task InitializeAsync() 
