@@ -1,5 +1,6 @@
 using BaseApi.Data;
 using BaseApi.Endpoints;
+using BaseApi.Logging;
 using BaseApi.Repositories;
 using BaseApi.Services;
 
@@ -14,6 +15,7 @@ builder.Services.AddSingleton<IDbConnectionFactory>(_ =>
 builder.Services.AddSingleton<DatabaseInitializer>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddTransient(typeof(ILoggerAdapter<>), typeof(LoggerAdapter<>));
 
 var app = builder.Build();
 app.UseSwagger();

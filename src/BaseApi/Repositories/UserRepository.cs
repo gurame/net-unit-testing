@@ -21,25 +21,29 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByIdAsync(Guid id)
     {
-        var connection = await _dbConnectionFactory.CreateConnectionAsync();
-        var user = await connection.QueryFirstOrDefaultAsync<User>("SELECT * FROM Users WHERE UserId = @UserId", new { UserId = id });
+        const string query = "SELECT * FROM Users WHERE UserId = @UserId";
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        var user = await connection.QueryFirstOrDefaultAsync<User>(query, new { UserId = id });
         return user;
     }
 
     public async Task<bool> CreateAsync(User user)
     {
-        var connection = await _dbConnectionFactory.CreateConnectionAsync();
-        return await connection.ExecuteAsync("INSERT INTO Users (UserId, FullName) VALUES (@UserId, @FullName)", user) > 0;
+        const string query = "INSERT INTO Users (UserId, FullName) VALUES (@UserId, @FullName)";
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        return await connection.ExecuteAsync(query, user) > 0;
     }
     public async  Task<bool> UpdateAsync(Guid id, User user)
     {
+        const string query = "UPDATE Users SET FullName = @FullName WHERE UserId = @UserId";
         user.UserId = id;
-        var connection = await _dbConnectionFactory.CreateConnectionAsync();
-        return await connection.ExecuteAsync("UPDATE Users SET FullName = @FullName WHERE UserId = @UserId", user) > 0;
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        return await connection.ExecuteAsync(query, user) > 0;
     }
     public async Task<bool> DeleteAsync(Guid id)
     {
-        var connection = await _dbConnectionFactory.CreateConnectionAsync();
-        return await connection.ExecuteAsync("DELETE FROM Users WHERE UserId = @UserId", new { UserId = id }) > 0;
+        const string query = "DELETE FROM Users WHERE UserId = @UserId";
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        return await connection.ExecuteAsync(query, new { UserId = id }) > 0;
     }
 }
