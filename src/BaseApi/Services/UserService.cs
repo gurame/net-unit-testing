@@ -1,7 +1,9 @@
 ﻿using Ardalis.Result;
+using BaseApi.Contracts;
 using BaseApi.Logging;
 using BaseApi.Models;
 using BaseApi.Repositories;
+using Mapster;
 
 namespace BaseApi.Services;
 
@@ -15,14 +17,14 @@ public class UserService : IUserService
         _logger = logger;
     }
 
-    public async Task<Result<IEnumerable<User>>> GetAllAsync()
+    public async Task<Result<IEnumerable<UserResponse>>> GetAllAsync()
     {
         _logger.LogInformation("Getting all users");
         var users = await _userRepository.GetAllAsync();
-        return users.ToList();
+        return users.Adapt<IEnumerable<UserResponse>>().ToList();
     }
 
-    public async Task<Result<User>> GetByIdAsync(Guid userId)
+    public async Task<Result<UserResponse>> GetByIdAsync(Guid userId)
     {
         _logger.LogInformation("Getting user by id: {UserId}", userId);
         var user = await _userRepository.GetByIdAsync(userId);
@@ -30,10 +32,10 @@ public class UserService : IUserService
         {
             return Result.NotFound();
         }
-        return user;
+        return user.Adapt<UserResponse>();
     }
     
-    public async Task<Result<User>> CreateAsync(User user)
+    public async Task<Result<UserResponse>> CreateAsync(User user)
     {
         _logger.LogInformation("Creating user: {User}", user);
         var result = await _userRepository.CreateAsync(user);
@@ -42,10 +44,10 @@ public class UserService : IUserService
             return Result.Error("Failed to create user");
         }
         var userCreated = await GetUserById(user.UserId);
-        return userCreated!;
+        return userCreated.Adapt<UserResponse>()!;
     }
 
-    public async Task<Result<User>> UpdateAsync(Guid id, User user)
+    public async Task<Result<UserResponse>> UpdateAsync(Guid id, User user)
     {
         _logger.LogInformation("Updating user by id: {UserId}", id);
         var existingUser = await GetUserById(id);
@@ -61,7 +63,7 @@ public class UserService : IUserService
         }
 
         var userUpdated = await GetUserById(user.UserId);
-        return userUpdated!;
+        return userUpdated.Adapt<UserResponse>()!;
     }
 
     public async Task<Result> DeleteAsync(Guid userId)

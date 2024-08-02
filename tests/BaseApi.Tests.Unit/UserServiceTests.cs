@@ -1,13 +1,14 @@
 using Ardalis.Result;
 using AutoBogus;
+using BaseApi.Contracts;
 using BaseApi.Logging;
 using BaseApi.Models;
 using BaseApi.Repositories;
 using BaseApi.Services;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+using Mapster;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 
 namespace BaseApi.Tests.Unit;
 
@@ -66,13 +67,14 @@ public class UserServiceTests
     {
         // Arrange
         var user = AutoFaker.Generate<User>();
+        var userResponse = user.Adapt<UserResponse>();
         _userRepository.GetByIdAsync(user.UserId).Returns(user);
 
         // Act
         var result = await _sut.GetByIdAsync(user.UserId);
 
         // Assert
-        result.Value.Should().Be(user);
+        result.Value.Should().BeEquivalentTo(userResponse);
     }
 
     [Fact]
@@ -80,7 +82,7 @@ public class UserServiceTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        _userRepository.GetByIdAsync(userId).Returns((User?)null);
+        _userRepository.GetByIdAsync(userId).ReturnsNull();
 
         // Act
         var user = await _sut.GetByIdAsync(userId);
@@ -94,6 +96,7 @@ public class UserServiceTests
     {
         // Arrange
         var user = AutoFaker.Generate<User>();
+        var userResponse = user.Adapt<UserResponse>();
         _userRepository.CreateAsync(user).Returns(true);
         _userRepository.GetByIdAsync(user.UserId).Returns(user);
 
@@ -101,7 +104,7 @@ public class UserServiceTests
         var result = await _sut.CreateAsync(user);
 
         // Assert
-        result.Value.Should().Be(user);
+        result.Value.Should().BeEquivalentTo(userResponse);
     }
 
     [Fact]
@@ -123,6 +126,7 @@ public class UserServiceTests
     {
         // Arrange
         var user = AutoFaker.Generate<User>();
+        var userResponse = user.Adapt<UserResponse>();
         _userRepository.UpdateAsync(user.UserId, user).Returns(true);
         _userRepository.GetByIdAsync(user.UserId).Returns(user);
 
@@ -130,7 +134,7 @@ public class UserServiceTests
         var result = await _sut.UpdateAsync(user.UserId, user);
 
         // Assert
-        result.Value.Should().Be(user);
+        result.Value.Should().BeEquivalentTo(userResponse);
     }
 
     [Fact]
@@ -153,7 +157,7 @@ public class UserServiceTests
     {
         // Arrange
         var user = AutoFaker.Generate<User>();
-        _userRepository.GetByIdAsync(user.UserId).Returns((User?)null);
+        _userRepository.GetByIdAsync(user.UserId).ReturnsNull();
 
         // Act
         var result = await _sut.UpdateAsync(user.UserId, user);
@@ -197,7 +201,7 @@ public class UserServiceTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        _userRepository.GetByIdAsync(userId).Returns((User?)null);
+        _userRepository.GetByIdAsync(userId).ReturnsNull();
 
         // Act
         var result = await _sut.DeleteAsync(userId);

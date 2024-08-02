@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Ardalis.Result.AspNetCore" Version="9.1.0" />
     <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.7" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />

@@ -1,6 +1,7 @@
 ﻿using Ardalis.Result.AspNetCore;
 using BaseApi.Models;
 using BaseApi.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BaseApi.Endpoints;
 
@@ -22,7 +23,7 @@ public static class UserEndpoints
 
 		app.MapPost(BasePath, async (IUserService userService, User user) => {
 			var result = await userService.CreateAsync(user);
-			return result.ToMinimalApiResult();
+			return Results.Created($"{BasePath}/{result.Value.UserId}", result.Value);
 		}).WithTags(Tag);
 
 		app.MapPut($"{BasePath}/{{id:guid}}", async (IUserService userService, Guid id, User user) => {
