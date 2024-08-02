@@ -400,3 +400,5 @@ FodyWeavers.xsd
 .DS_Store
 
 **/users.db
+
+[Cc]overage-[Rr]eport*/
