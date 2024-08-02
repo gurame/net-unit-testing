@@ -1,4 +1,5 @@
 using BaseApi.Data;
+using BaseApi.Endpoints;
 using BaseApi.Repositories;
 using BaseApi.Services;
 
@@ -18,9 +19,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/users", async (IUserService userService) => {
-	return await userService.GetAllAsync();
-});
+app.UseUserEndpoints();
 
 var databaseInitializer = app.Services.GetRequiredService<DatabaseInitializer>();
 await databaseInitializer.InitializeAsync();

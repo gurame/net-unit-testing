@@ -25,7 +25,7 @@ public class UserServiceTests
         var users = await _sut.GetAllAsync();
 
         // Assert
-        users.Should().BeEmpty();
+        users.Value.Should().BeEmpty();
     }
 
     [Fact]
@@ -42,6 +42,6 @@ public class UserServiceTests
         var users = await _sut.GetAllAsync();
 
         // Assert
-        users.Should().BeEquivalentTo(expectedUsers);
+        users.Value.Should().BeEquivalentTo(expectedUsers);
     }
 }
