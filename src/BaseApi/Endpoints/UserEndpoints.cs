@@ -15,7 +15,7 @@ public static class UserEndpoints
 			return await userService.GetAllAsync();
 		}).WithTags(Tag);
 
-		app.MapGet($"{BasePath}/{{id}}", async (IUserService userService, Guid id) => {
+		app.MapGet($"{BasePath}/{{id:guid}}", async (IUserService userService, Guid id) => {
 			var result = await userService.GetByIdAsync(id);
 			return result.ToMinimalApiResult();
 		}).WithTags(Tag);
@@ -25,12 +25,12 @@ public static class UserEndpoints
 			return result.ToMinimalApiResult();
 		}).WithTags(Tag);
 
-		app.MapPut($"{BasePath}/{{id}}", async (IUserService userService, Guid id, User user) => {
+		app.MapPut($"{BasePath}/{{id:guid}}", async (IUserService userService, Guid id, User user) => {
 			var result = await userService.UpdateAsync(id, user);
 			return result.ToMinimalApiResult();
 		}).WithTags(Tag);
 
-		app.MapDelete($"{BasePath}/{{id}}", async (IUserService userService, Guid id) => {
+		app.MapDelete($"{BasePath}/{{id:guid}}", async (IUserService userService, Guid id) => {
 			var result = await userService.DeleteAsync(id);
 			return result.ToMinimalApiResult();
 		}).WithTags(Tag);
