@@ -14,8 +14,7 @@ public class CalculatorTests : IAsyncLifetime
 
     [Theory]
     [InlineData(1, 2, 3, Skip = "This test is skipped")] 
-    [InlineData(2, 3, 5)]
-    [InlineData(3, 4, 7)]
+    [MemberData(nameof(AddTestData))]
     public void Add_ShouldAddTwoNumbers_WhenTwoNumbersAreIntegers(int a, int b, int expected)
     {
         // Act
@@ -25,16 +24,17 @@ public class CalculatorTests : IAsyncLifetime
         Assert.Equal(expected, result);
     }
 
-    [Fact(Skip = "This test is skipped")]
-    public void Subtract_ShouldSubtractTwoNumbers_WhenTwoNumbersAreIntegers()
+    [Theory]
+    [ClassData(typeof(CalculatorSubtractTestData))]
+    public void Subtract_ShouldSubtractTwoNumbers_WhenTwoNumbersAreIntegers(int a, int b, int expected)
     {
         // Act
-        var result = _sut.Subtract(10, 5);
+        var result = _sut.Subtract(a, b);
 
         // Assert
-        Assert.Equal(5, result);
+        Assert.Equal(expected, result);
     }
-
+    
     [Theory]
     [InlineData(2, 3, 6)]
     [InlineData(3, 8, 24)]
@@ -70,4 +70,10 @@ public class CalculatorTests : IAsyncLifetime
         _output.WriteLine("CalculatorTests ended");
         await Task.CompletedTask;
     }
+
+    public static IEnumerable<object[]> AddTestData =>
+        [
+            [1, 2, 3],
+            [2, 3, 5]
+        ];
 }

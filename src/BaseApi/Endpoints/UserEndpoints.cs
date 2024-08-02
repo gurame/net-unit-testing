@@ -1,7 +1,6 @@
 ﻿using Ardalis.Result.AspNetCore;
 using BaseApi.Models;
 using BaseApi.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BaseApi.Endpoints;
 
