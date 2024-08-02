@@ -6,30 +6,33 @@ namespace BaseApi.Endpoints;
 
 public static class UserEndpoints
 {
+	private const string BasePath = "/users";
+	private const string Tag = "Users";
+
 	public static void UseUserEndpoints(this IEndpointRouteBuilder app)
 	{
-		app.MapGet("/users", async (IUserService userService) => {
+		app.MapGet(BasePath, async (IUserService userService) => {
 			return await userService.GetAllAsync();
-		});
+		}).WithTags(Tag);
 
-		app.MapGet("/users/{id}", async (IUserService userService, Guid id) => {
+		app.MapGet($"{BasePath}/{{id}}", async (IUserService userService, Guid id) => {
 			var result = await userService.GetByIdAsync(id);
 			return result.ToMinimalApiResult();
-		});
+		}).WithTags(Tag);
 
-		app.MapPost("/users", async (IUserService userService, User user) => {
+		app.MapPost(BasePath, async (IUserService userService, User user) => {
 			var result = await userService.CreateAsync(user);
 			return result.ToMinimalApiResult();
-		});
+		}).WithTags(Tag);
 
-		app.MapPut("/users/{id}", async (IUserService userService, Guid id, User user) => {
+		app.MapPut($"{BasePath}/{{id}}", async (IUserService userService, Guid id, User user) => {
 			var result = await userService.UpdateAsync(id, user);
 			return result.ToMinimalApiResult();
-		});
+		}).WithTags(Tag);
 
-		app.MapDelete("/users/{id}", async (IUserService userService, Guid id) => {
+		app.MapDelete($"{BasePath}/{{id}}", async (IUserService userService, Guid id) => {
 			var result = await userService.DeleteAsync(id);
 			return result.ToMinimalApiResult();
-		});
+		}).WithTags(Tag);
 	}
 }
